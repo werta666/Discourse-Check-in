@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
-class CheckInController < ApplicationController
-  before_action :ensure_logged_in
-
+class CheckInController < ::ApplicationController
   def index
-    # 渲染签到主页面
+    render plain: "签到页面测试 - 如果您看到这个消息，说明路由工作正常！"
   end
 
   def create
