@@ -48,6 +48,7 @@ en:
         previous: "Previous"
         next: "Next"
         page: "Page"
+        coming_soon: "Check-in records feature coming soon!"
 
       makeup:
         title: "Makeup Check-in"
@@ -60,6 +61,7 @@ en:
         insufficient_points: "Insufficient points for makeup"
         need_more_points: "You need %{needed} more points"
         disabled: "Makeup check-in is disabled"
+        coming_soon: "Makeup check-in feature coming soon!"
 
       success:
         checked_in: "Successfully checked in!"
