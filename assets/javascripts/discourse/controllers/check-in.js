@@ -1,4 +1,6 @@
-export default Ember.Controller.extend({
+import Controller from "@ember/controller";
+
+export default Controller.extend({
   activeTab: "check-in",
   showSuccessMessage: false,
   successMessage: "",
@@ -66,15 +68,15 @@ export default Ember.Controller.extend({
     }, 5000);
   },
 
-  isCheckInTab: function() {
+  isCheckInTab: Ember.computed('activeTab', function() {
     return this.activeTab === 'check-in';
-  }.property('activeTab'),
+  }),
 
-  isRecordsTab: function() {
+  isRecordsTab: Ember.computed('activeTab', function() {
     return this.activeTab === 'records';
-  }.property('activeTab'),
+  }),
 
-  isMakeupTab: function() {
+  isMakeupTab: Ember.computed('activeTab', function() {
     return this.activeTab === 'makeup';
-  }.property('activeTab')
+  })
 });

@@ -1,7 +1,8 @@
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import Component from "@ember/component";
 
-export default Ember.Component.extend({
+export default Component.extend({
   loading: false,
   message: "Click to check in",
 

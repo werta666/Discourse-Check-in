@@ -23,7 +23,7 @@
             {{#each availableDates as |dateOption|}}
               <button
                 class="btn date-option {{if (eq selectedDate dateOption.value) 'btn-primary' 'btn-default'}}"
-                onclick={{action "selectDate" dateOption.value}}
+                {{action "selectDate" dateOption.value}}
               >
                 <div class="date-day">{{dateOption.dayOfWeek}}</div>
                 <div class="date-label">{{dateOption.label}}</div>
@@ -36,7 +36,7 @@
           <div class="makeup-action">
             <button
               class="btn btn-primary makeup-button"
-              onclick={{action "performMakeup"}}
+              {{action "performMakeup"}}
               disabled={{not canPerformMakeup}}
             >
               {{#if loading}}

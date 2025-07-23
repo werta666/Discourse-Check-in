@@ -1,7 +1,8 @@
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import Component from "@ember/component";
 
-export default Ember.Component.extend({
+export default Component.extend({
   loading: false,
   records: null,
   pagination: null,
@@ -48,25 +49,25 @@ export default Ember.Component.extend({
     }
   },
 
-  hasRecords: function() {
+  hasRecords: Ember.computed('records.[]', function() {
     return this.records && this.records.length > 0;
-  }.property('records.[]'),
+  }),
 
-  showPagination: function() {
+  showPagination: Ember.computed('pagination.total_count', 'pagination.per_page', function() {
     return this.get('pagination.total_count') > this.get('pagination.per_page');
-  }.property('pagination.total_count', 'pagination.per_page'),
+  }),
 
-  canGoNext: function() {
+  canGoNext: Ember.computed('pagination.has_more', function() {
     return this.get('pagination.has_more');
-  }.property('pagination.has_more'),
+  }),
 
-  canGoPrevious: function() {
+  canGoPrevious: Ember.computed('currentPage', function() {
     return this.currentPage > 1;
-  }.property('currentPage'),
+  }),
 
-  pageInfo: function() {
+  pageInfo: Ember.computed('currentPage', 'pagination.per_page', 'pagination.total_count', function() {
     const start = (this.currentPage - 1) * this.get('pagination.per_page') + 1;
     const end = Math.min(this.currentPage * this.get('pagination.per_page'), this.get('pagination.total_count'));
     return `${start}-${end} of ${this.get('pagination.total_count')}`;
-  }.property('currentPage', 'pagination.per_page', 'pagination.total_count')
+  })
 });

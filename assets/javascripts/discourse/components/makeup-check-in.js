@@ -1,7 +1,8 @@
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import Component from "@ember/component";
 
-export default Ember.Component.extend({
+export default Component.extend({
   loading: false,
   selectedDate: null,
   userPoints: 0,
@@ -112,25 +113,25 @@ export default Ember.Component.extend({
     });
   },
 
-  canAffordMakeup: function() {
+  canAffordMakeup: Ember.computed('userPoints', 'settings.makeup_cost_points', function() {
     const cost = this.get('settings.makeup_cost_points') || 0;
     return this.userPoints >= cost;
-  }.property('userPoints', 'settings.makeup_cost_points'),
+  }),
 
-  makeupCost: function() {
+  makeupCost: Ember.computed('settings.makeup_cost_points', function() {
     return this.get('settings.makeup_cost_points') || 0;
-  }.property('settings.makeup_cost_points'),
+  }),
 
-  netGain: function() {
+  netGain: Ember.computed('settings.daily_points', 'makeupCost', function() {
     const dailyPoints = this.get('settings.daily_points') || 0;
     return dailyPoints - this.get('makeupCost');
-  }.property('settings.daily_points', 'makeupCost'),
+  }),
 
-  canPerformMakeup: function() {
+  canPerformMakeup: Ember.computed('selectedDate', 'canAffordMakeup', 'loading', function() {
     return this.selectedDate && this.get('canAffordMakeup') && !this.loading;
-  }.property('selectedDate', 'canAffordMakeup', 'loading'),
+  }),
 
-  makeupEnabled: function() {
+  makeupEnabled: Ember.computed('settings.makeup_enabled', function() {
     return this.get('settings.makeup_enabled');
-  }.property('settings.makeup_enabled')
+  })
 });
