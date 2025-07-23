@@ -3,11 +3,11 @@
     <h3>{{i18n "check_in.records.title"}}</h3>
   </div>
 
-  {{#if this.loading}}
+  {{#if loading}}
     <div class="loading-container">
       {{loading-spinner}}
     </div>
-  {{else if this.hasRecords}}
+  {{else if hasRecords}}
     <div class="records-table">
       <table class="table">
         <thead>
@@ -19,7 +19,7 @@
           </tr>
         </thead>
         <tbody>
-          {{#each this.records as |record|}}
+          {{#each records as |record|}}
             <tr class="record-row">
               <td class="record-date">{{record.check_in_date}}</td>
               <td class="record-type">
@@ -47,27 +47,27 @@
       </table>
     </div>
 
-    {{#if this.showPagination}}
+    {{#if showPagination}}
       <div class="records-pagination">
         <div class="pagination-info">
-          {{this.pageInfo}}
+          {{pageInfo}}
         </div>
         <div class="pagination-controls">
-          <button 
+          <button
             class="btn btn-default"
-            {{on "click" this.loadPreviousPage}}
-            disabled={{not this.canGoPrevious}}
+            onclick={{action "loadPreviousPage"}}
+            disabled={{not canGoPrevious}}
           >
             {{d-icon "chevron-left"}}
             {{i18n "check_in.records.previous"}}
           </button>
-          
-          <span class="page-number">{{i18n "check_in.records.page"}} {{this.currentPage}}</span>
-          
-          <button 
+
+          <span class="page-number">{{i18n "check_in.records.page"}} {{currentPage}}</span>
+
+          <button
             class="btn btn-default"
-            {{on "click" this.loadNextPage}}
-            disabled={{not this.canGoNext}}
+            onclick={{action "loadNextPage"}}
+            disabled={{not canGoNext}}
           >
             {{i18n "check_in.records.next"}}
             {{d-icon "chevron-right"}}

@@ -19,7 +19,7 @@
   <div class="check-in-action">
     <button
       class={{buttonClass}}
-      {{action "checkIn"}}
+      onclick={{action "checkIn"}}
       disabled={{or loading (not canCheckIn)}}
     >
       {{#if loading}}

@@ -3,7 +3,7 @@
     {{#if this.showSuccessMessage}}
       <div class="check-in-message success-message">
         <span class="message-text">{{this.successMessage}}</span>
-        <button class="btn-link close-message" {{action "hideMessage"}}>
+        <button class="btn-link close-message" onclick={{action "hideMessage"}}>
           {{d-icon "times"}}
         </button>
       </div>
@@ -18,7 +18,7 @@
       <nav class="nav-tabs">
         <button
           class="nav-tab {{if isCheckInTab 'active'}}"
-          {{action "switchTab" "check-in"}}
+          onclick={{action "switchTab" "check-in"}}
         >
           {{d-icon "calendar-plus"}}
           {{i18n "check_in.tabs.check_in"}}
@@ -26,7 +26,7 @@
 
         <button
           class="nav-tab {{if isRecordsTab 'active'}}"
-          {{action "switchTab" "records"}}
+          onclick={{action "switchTab" "records"}}
         >
           {{d-icon "list"}}
           {{i18n "check_in.tabs.records"}}
@@ -34,7 +34,7 @@
 
         <button
           class="nav-tab {{if isMakeupTab 'active'}}"
-          {{action "switchTab" "makeup"}}
+          onclick={{action "switchTab" "makeup"}}
         >
           {{d-icon "undo"}}
           {{i18n "check_in.tabs.makeup"}}
@@ -44,6 +44,7 @@
       <div class="tab-content">
         {{#if isCheckInTab}}
           <div class="tab-pane active">
+            {{simple-check-in}}
             {{check-in-button}}
           </div>
         {{/if}}

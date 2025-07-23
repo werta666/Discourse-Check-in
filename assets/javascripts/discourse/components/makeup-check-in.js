@@ -1,147 +1,136 @@
-import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
-import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import I18n from "I18n";
 
-export default class MakeupCheckIn extends Component {
-  @service currentUser;
-  @service appEvents;
-  
-  @tracked loading = false;
-  @tracked selectedDate = null;
-  @tracked userPoints = 0;
-  @tracked settings = {};
-  @tracked availableDates = [];
+export default Ember.Component.extend({
+  loading: false,
+  selectedDate: null,
+  userPoints: 0,
+  settings: null,
+  availableDates: null,
 
-  constructor() {
-    super(...arguments);
-    this.loadUserPoints();
-    this.loadSettings();
-    this.generateAvailableDates();
-  }
+  didInsertElement() {
+    this._super(...arguments);
+    this.set('settings', {});
+    this.set('availableDates', []);
+    this.send('loadUserPoints');
+    this.send('loadSettings');
+  },
 
-  @action
-  async loadUserPoints() {
-    try {
-      const response = await ajax("/check-in/points");
-      if (response.success) {
-        this.userPoints = response.data.total_points;
+  actions: {
+    loadUserPoints() {
+      ajax("/check-in/points").then((response) => {
+        if (response.success) {
+          this.set('userPoints', response.data.total_points);
+        }
+      }).catch((error) => {
+        popupAjaxError(error);
+      });
+    },
+
+    loadSettings() {
+      ajax("/check-in/check-in-status").then((response) => {
+        if (response.success) {
+          this.set('settings', response.data.settings);
+          this.send('generateAvailableDates');
+        }
+      }).catch((error) => {
+        popupAjaxError(error);
+      });
+    },
+
+    generateAvailableDates() {
+      if (!this.get('settings.makeup_enabled')) return;
+
+      const maxDays = this.get('settings.makeup_max_days') || 7;
+      const today = new Date();
+      const dates = [];
+
+      for (let i = 1; i <= maxDays; i++) {
+        const date = new Date(today);
+        date.setDate(today.getDate() - i);
+        dates.push({
+          value: date.toISOString().split('T')[0],
+          label: this.formatDate(date),
+          dayOfWeek: date.toLocaleDateString('en-US', { weekday: 'short' })
+        });
       }
-    } catch (error) {
-      popupAjaxError(error);
-    }
-  }
 
-  @action
-  async loadSettings() {
-    try {
-      const response = await ajax("/check-in/check-in-status");
-      if (response.success) {
-        this.settings = response.data.settings;
-        this.generateAvailableDates();
+      this.set('availableDates', dates);
+    },
+
+    selectDate(dateValue) {
+      this.set('selectedDate', dateValue);
+    },
+
+    performMakeup() {
+      if (!this.selectedDate || this.loading) return;
+
+      if (!this.get('canAffordMakeup')) {
+        if (this.appEvents) {
+          this.appEvents.trigger("check-in:error", {
+            message: I18n.t("check_in.makeup.insufficient_points")
+          });
+        }
+        return;
       }
-    } catch (error) {
-      popupAjaxError(error);
-    }
-  }
 
-  @action
-  generateAvailableDates() {
-    if (!this.settings.makeup_enabled) return;
-    
-    const maxDays = this.settings.makeup_max_days || 7;
-    const today = new Date();
-    const dates = [];
-    
-    for (let i = 1; i <= maxDays; i++) {
-      const date = new Date(today);
-      date.setDate(today.getDate() - i);
-      dates.push({
-        value: date.toISOString().split('T')[0],
-        label: this.formatDate(date),
-        dayOfWeek: date.toLocaleDateString('en-US', { weekday: 'short' })
+      this.set('loading', true);
+
+      ajax("/check-in/makeup-check-in", {
+        type: "POST",
+        data: { date: this.selectedDate }
+      }).then((response) => {
+        if (response.success) {
+          if (this.appEvents) {
+            this.appEvents.trigger("check-in:makeup-success", {
+              date: response.data.date,
+              pointsEarned: response.data.points_earned,
+              makeupCost: response.data.makeup_cost,
+              netPoints: response.data.net_points
+            });
+          }
+
+          // Refresh user points
+          this.send('loadUserPoints');
+
+          // Reset selection
+          this.set('selectedDate', null);
+        }
+      }).catch((error) => {
+        popupAjaxError(error);
+      }).finally(() => {
+        this.set('loading', false);
       });
     }
-    
-    this.availableDates = dates;
-  }
+  },
 
-  @action
   formatDate(date) {
     return date.toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
       year: 'numeric'
     });
-  }
+  },
 
-  @action
-  selectDate(dateValue) {
-    this.selectedDate = dateValue;
-  }
-
-  @action
-  async performMakeup() {
-    if (!this.selectedDate || this.loading) return;
-    
-    if (!this.canAffordMakeup) {
-      this.appEvents.trigger("check-in:error", {
-        message: I18n.t("check_in.makeup.insufficient_points")
-      });
-      return;
-    }
-
-    this.loading = true;
-    
-    try {
-      const response = await ajax("/check-in/makeup-check-in", {
-        type: "POST",
-        data: { date: this.selectedDate }
-      });
-
-      if (response.success) {
-        this.appEvents.trigger("check-in:makeup-success", {
-          date: response.data.date,
-          pointsEarned: response.data.points_earned,
-          makeupCost: response.data.makeup_cost,
-          netPoints: response.data.net_points
-        });
-        
-        // Refresh user points
-        this.loadUserPoints();
-        
-        // Reset selection
-        this.selectedDate = null;
-      }
-    } catch (error) {
-      popupAjaxError(error);
-    } finally {
-      this.loading = false;
-    }
-  }
-
-  get canAffordMakeup() {
-    const cost = this.settings.makeup_cost_points || 0;
+  canAffordMakeup: function() {
+    const cost = this.get('settings.makeup_cost_points') || 0;
     return this.userPoints >= cost;
-  }
+  }.property('userPoints', 'settings.makeup_cost_points'),
 
-  get makeupCost() {
-    return this.settings.makeup_cost_points || 0;
-  }
+  makeupCost: function() {
+    return this.get('settings.makeup_cost_points') || 0;
+  }.property('settings.makeup_cost_points'),
 
-  get netGain() {
-    const dailyPoints = this.settings.daily_points || 0;
-    return dailyPoints - this.makeupCost;
-  }
+  netGain: function() {
+    const dailyPoints = this.get('settings.daily_points') || 0;
+    return dailyPoints - this.get('makeupCost');
+  }.property('settings.daily_points', 'makeupCost'),
 
-  get canPerformMakeup() {
-    return this.selectedDate && this.canAffordMakeup && !this.loading;
-  }
+  canPerformMakeup: function() {
+    return this.selectedDate && this.get('canAffordMakeup') && !this.loading;
+  }.property('selectedDate', 'canAffordMakeup', 'loading'),
 
-  get makeupEnabled() {
-    return this.settings.makeup_enabled;
-  }
-}
+  makeupEnabled: function() {
+    return this.get('settings.makeup_enabled');
+  }.property('settings.makeup_enabled')
+});

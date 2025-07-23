@@ -1,29 +1,29 @@
 <div class="makeup-check-in">
-  {{#if this.makeupEnabled}}
+  {{#if makeupEnabled}}
     <div class="makeup-header">
       <h4>{{i18n "check_in.makeup.title"}}</h4>
       <div class="makeup-info">
         <div class="user-points">
-          {{i18n "check_in.makeup.your_points"}}: <strong>{{this.userPoints}}</strong>
+          {{i18n "check_in.makeup.your_points"}}: <strong>{{userPoints}}</strong>
         </div>
         <div class="makeup-cost">
-          {{i18n "check_in.makeup.cost"}}: <strong>{{this.makeupCost}}</strong>
+          {{i18n "check_in.makeup.cost"}}: <strong>{{makeupCost}}</strong>
         </div>
         <div class="net-gain">
-          {{i18n "check_in.makeup.net_gain"}}: <strong>{{this.netGain}}</strong>
+          {{i18n "check_in.makeup.net_gain"}}: <strong>{{netGain}}</strong>
         </div>
       </div>
     </div>
 
-    {{#if this.canAffordMakeup}}
+    {{#if canAffordMakeup}}
       <div class="makeup-form">
         <div class="date-selection">
           <label>{{i18n "check_in.makeup.select_date"}}:</label>
           <div class="date-options">
-            {{#each this.availableDates as |dateOption|}}
-              <button 
-                class="btn date-option {{if (eq this.selectedDate dateOption.value) 'btn-primary' 'btn-default'}}"
-                {{on "click" (fn this.selectDate dateOption.value)}}
+            {{#each availableDates as |dateOption|}}
+              <button
+                class="btn date-option {{if (eq selectedDate dateOption.value) 'btn-primary' 'btn-default'}}"
+                onclick={{action "selectDate" dateOption.value}}
               >
                 <div class="date-day">{{dateOption.dayOfWeek}}</div>
                 <div class="date-label">{{dateOption.label}}</div>
@@ -32,14 +32,14 @@
           </div>
         </div>
 
-        {{#if this.selectedDate}}
+        {{#if selectedDate}}
           <div class="makeup-action">
-            <button 
+            <button
               class="btn btn-primary makeup-button"
-              {{on "click" this.performMakeup}}
-              disabled={{not this.canPerformMakeup}}
+              onclick={{action "performMakeup"}}
+              disabled={{not canPerformMakeup}}
             >
-              {{#if this.loading}}
+              {{#if loading}}
                 {{d-icon "spinner" class="fa-spin"}}
                 {{i18n "check_in.makeup.processing"}}
               {{else}}
@@ -59,7 +59,7 @@
           {{i18n "check_in.makeup.insufficient_points"}}
         </div>
         <div class="points-needed">
-          {{i18n "check_in.makeup.need_more_points" needed=(sub this.makeupCost this.userPoints)}}
+          {{i18n "check_in.makeup.need_more_points" needed=(sub makeupCost userPoints)}}
         </div>
       </div>
     {{/if}}

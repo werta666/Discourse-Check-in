@@ -10,7 +10,7 @@ export default Ember.Component.extend({
   nextBonusIn: null,
   settings: null,
 
-  init() {
+  didInsertElement() {
     this._super(...arguments);
     this.set('settings', {});
     this.send('loadStatus');
@@ -61,7 +61,7 @@ export default Ember.Component.extend({
         }
 
         // Refresh status after a short delay
-        setTimeout(() => this.loadStatus(), 1000);
+        setTimeout(() => this.send('loadStatus'), 1000);
       }
     }).catch((error) => {
       popupAjaxError(error);
@@ -71,7 +71,7 @@ export default Ember.Component.extend({
     }
   },
 
-  buttonText: Ember.computed('loading', 'checkedInToday', function() {
+  buttonText: function() {
     if (this.loading) {
       return I18n.t("check_in.button.checking_in");
     }
@@ -81,9 +81,9 @@ export default Ember.Component.extend({
     }
 
     return I18n.t("check_in.button.check_in");
-  }),
+  }.property('loading', 'checkedInToday'),
 
-  buttonClass: Ember.computed('checkedInToday', 'canCheckIn', 'loading', function() {
+  buttonClass: function() {
     let classes = ["btn", "check-in-button"];
 
     if (this.checkedInToday) {
@@ -99,9 +99,9 @@ export default Ember.Component.extend({
     }
 
     return classes.join(" ");
-  }),
+  }.property('checkedInToday', 'canCheckIn', 'loading'),
 
-  statusText: Ember.computed('checkedInToday', 'settings.check_in_enabled', function() {
+  statusText: function() {
     if (this.checkedInToday) {
       return I18n.t("check_in.status.checked_in_today");
     }
@@ -111,9 +111,9 @@ export default Ember.Component.extend({
     }
 
     return I18n.t("check_in.status.ready_to_check_in");
-  }),
+  }.property('checkedInToday', 'settings.check_in_enabled'),
 
-  pointsInfo: Ember.computed('settings.daily_points', 'settings.consecutive_bonus_enabled', 'nextBonusIn', 'settings.consecutive_bonus_points', function() {
+  pointsInfo: function() {
     const dailyPoints = this.get('settings.daily_points') || 0;
     let info = I18n.t("check_in.info.daily_points", { points: dailyPoints });
 
@@ -131,5 +131,5 @@ export default Ember.Component.extend({
     }
 
     return info;
-  })
+  }.property('settings.daily_points', 'settings.consecutive_bonus_enabled', 'nextBonusIn', 'settings.consecutive_bonus_points')
 });

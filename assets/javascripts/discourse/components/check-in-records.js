@@ -1,77 +1,72 @@
-import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
-import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
-export default class CheckInRecords extends Component {
-  @service currentUser;
-  
-  @tracked loading = false;
-  @tracked records = [];
-  @tracked pagination = {};
-  @tracked currentPage = 1;
+export default Ember.Component.extend({
+  loading: false,
+  records: null,
+  pagination: null,
+  currentPage: 1,
 
-  constructor() {
-    super(...arguments);
-    this.loadRecords();
-  }
+  didInsertElement() {
+    this._super(...arguments);
+    this.set('records', []);
+    this.set('pagination', {});
+    this.send('loadRecords');
+  },
 
-  @action
-  async loadRecords(page = 1) {
-    this.loading = true;
-    this.currentPage = page;
-    
-    try {
-      const response = await ajax("/check-in/check-in-records", {
+  actions: {
+    loadRecords(page = 1) {
+      this.set('loading', true);
+      this.set('currentPage', page);
+
+      ajax("/check-in/check-in-records", {
         data: { page, per_page: 20 }
+      }).then((response) => {
+        if (response.success) {
+          this.setProperties({
+            records: response.data.records,
+            pagination: response.data.pagination
+          });
+        }
+      }).catch((error) => {
+        popupAjaxError(error);
+      }).finally(() => {
+        this.set('loading', false);
       });
+    },
 
-      if (response.success) {
-        this.records = response.data.records;
-        this.pagination = response.data.pagination;
+    loadNextPage() {
+      if (this.get('pagination.has_more')) {
+        this.send('loadRecords', this.currentPage + 1);
       }
-    } catch (error) {
-      popupAjaxError(error);
-    } finally {
-      this.loading = false;
-    }
-  }
+    },
 
-  @action
-  loadNextPage() {
-    if (this.pagination.has_more) {
-      this.loadRecords(this.currentPage + 1);
+    loadPreviousPage() {
+      if (this.currentPage > 1) {
+        this.send('loadRecords', this.currentPage - 1);
+      }
     }
-  }
+  },
 
-  @action
-  loadPreviousPage() {
-    if (this.currentPage > 1) {
-      this.loadRecords(this.currentPage - 1);
-    }
-  }
-
-  get hasRecords() {
+  hasRecords: function() {
     return this.records && this.records.length > 0;
-  }
+  }.property('records.[]'),
 
-  get showPagination() {
-    return this.pagination.total_count > this.pagination.per_page;
-  }
+  showPagination: function() {
+    return this.get('pagination.total_count') > this.get('pagination.per_page');
+  }.property('pagination.total_count', 'pagination.per_page'),
 
-  get canGoNext() {
-    return this.pagination.has_more;
-  }
+  canGoNext: function() {
+    return this.get('pagination.has_more');
+  }.property('pagination.has_more'),
 
-  get canGoPrevious() {
+  canGoPrevious: function() {
     return this.currentPage > 1;
-  }
+  }.property('currentPage'),
 
-  get pageInfo() {
-    const start = (this.currentPage - 1) * this.pagination.per_page + 1;
-    const end = Math.min(this.currentPage * this.pagination.per_page, this.pagination.total_count);
-    return `${start}-${end} of ${this.pagination.total_count}`;
-  }
-}
+  pageInfo: function() {
+    const start = (this.currentPage - 1) * this.get('pagination.per_page') + 1;
+    const end = Math.min(this.currentPage * this.get('pagination.per_page'), this.get('pagination.total_count'));
+    return `${start}-${end} of ${this.get('pagination.total_count')}`;
+  }.property('currentPage', 'pagination.per_page', 'pagination.total_count')
+});
