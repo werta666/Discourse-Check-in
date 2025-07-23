@@ -1,0 +1,379 @@
+// Check-in plugin styles
+.check-in-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.check-in-container {
+  background: var(--primary-very-low);
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.check-in-header {
+  text-align: center;
+  margin-bottom: 30px;
+  
+  h1 {
+    color: var(--primary);
+    margin-bottom: 10px;
+  }
+  
+  .page-description {
+    color: var(--primary-medium);
+    font-size: 1.1em;
+  }
+}
+
+.check-in-message {
+  padding: 15px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+  &.success-message {
+    background: var(--success-low);
+    border: 1px solid var(--success);
+    color: var(--success);
+  }
+  
+  .close-message {
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 10px;
+  }
+}
+
+.check-in-tabs {
+  .nav-tabs {
+    display: flex;
+    border-bottom: 2px solid var(--primary-low);
+    margin-bottom: 20px;
+    
+    .nav-tab {
+      background: none;
+      border: none;
+      padding: 12px 20px;
+      cursor: pointer;
+      color: var(--primary-medium);
+      border-bottom: 2px solid transparent;
+      transition: all 0.3s ease;
+      
+      &:hover {
+        color: var(--primary);
+        background: var(--primary-very-low);
+      }
+      
+      &.active {
+        color: var(--tertiary);
+        border-bottom-color: var(--tertiary);
+      }
+      
+      .d-icon {
+        margin-right: 8px;
+      }
+    }
+  }
+}
+
+// Check-in widget styles
+.check-in-widget {
+  background: var(--secondary);
+  border: 1px solid var(--primary-low);
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+}
+
+.check-in-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  
+  h3 {
+    margin: 0;
+    color: var(--primary);
+  }
+  
+  .check-in-points {
+    .points-label {
+      color: var(--primary-medium);
+      margin-right: 5px;
+    }
+    
+    .points-value {
+      font-weight: bold;
+      color: var(--tertiary);
+      font-size: 1.2em;
+    }
+  }
+}
+
+.check-in-status {
+  margin-bottom: 20px;
+  
+  .status-text {
+    font-size: 1.1em;
+    margin-bottom: 10px;
+  }
+  
+  .consecutive-days {
+    color: var(--tertiary);
+    font-weight: bold;
+  }
+}
+
+.check-in-button {
+  min-width: 150px;
+  padding: 12px 24px;
+  font-size: 1.1em;
+  margin: 10px 0;
+  
+  .d-icon {
+    margin-right: 8px;
+  }
+  
+  &.loading {
+    opacity: 0.7;
+  }
+}
+
+.check-in-info {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid var(--primary-low);
+  
+  .points-info, .makeup-info {
+    color: var(--primary-medium);
+    font-size: 0.9em;
+    margin: 5px 0;
+  }
+}
+
+// Records styles
+.check-in-records {
+  .records-header {
+    margin-bottom: 20px;
+    
+    h3 {
+      color: var(--primary);
+    }
+  }
+  
+  .records-table {
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      
+      th, td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid var(--primary-low);
+      }
+      
+      th {
+        background: var(--primary-very-low);
+        font-weight: bold;
+        color: var(--primary);
+      }
+      
+      .record-type {
+        .makeup-badge, .regular-badge {
+          display: inline-flex;
+          align-items: center;
+          padding: 4px 8px;
+          border-radius: 4px;
+          font-size: 0.85em;
+          
+          .d-icon {
+            margin-right: 4px;
+          }
+        }
+        
+        .makeup-badge {
+          background: var(--highlight-low);
+          color: var(--highlight);
+        }
+        
+        .regular-badge {
+          background: var(--success-low);
+          color: var(--success);
+        }
+      }
+      
+      .points-earned {
+        color: var(--success);
+        font-weight: bold;
+      }
+    }
+  }
+  
+  .records-pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    
+    .pagination-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      
+      .page-number {
+        color: var(--primary-medium);
+      }
+    }
+  }
+  
+  .no-records {
+    text-align: center;
+    padding: 40px;
+    color: var(--primary-medium);
+    
+    .no-records-icon {
+      font-size: 3em;
+      margin-bottom: 15px;
+      opacity: 0.5;
+    }
+  }
+}
+
+// Makeup styles
+.makeup-check-in {
+  .makeup-header {
+    margin-bottom: 20px;
+    
+    h4 {
+      color: var(--primary);
+      margin-bottom: 15px;
+    }
+    
+    .makeup-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+      padding: 15px;
+      background: var(--primary-very-low);
+      border-radius: 6px;
+      
+      > div {
+        text-align: center;
+        
+        strong {
+          color: var(--tertiary);
+        }
+      }
+    }
+  }
+  
+  .date-selection {
+    margin-bottom: 20px;
+    
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: bold;
+      color: var(--primary);
+    }
+    
+    .date-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 10px;
+      
+      .date-option {
+        padding: 10px;
+        text-align: center;
+        border-radius: 6px;
+        
+        .date-day {
+          font-size: 0.8em;
+          color: var(--primary-medium);
+        }
+        
+        .date-label {
+          font-size: 0.9em;
+          margin-top: 2px;
+        }
+      }
+    }
+  }
+  
+  .makeup-action {
+    text-align: center;
+    margin-top: 20px;
+    
+    .makeup-button {
+      min-width: 180px;
+      padding: 12px 24px;
+    }
+  }
+  
+  .insufficient-points, .makeup-disabled {
+    text-align: center;
+    padding: 30px;
+    color: var(--primary-medium);
+    
+    .warning-icon, .disabled-icon {
+      font-size: 2.5em;
+      margin-bottom: 15px;
+      color: var(--danger);
+    }
+    
+    .warning-text, .disabled-text {
+      font-size: 1.1em;
+      margin-bottom: 10px;
+    }
+  }
+}
+
+// Loading spinner
+.loading-container {
+  text-align: center;
+  padding: 40px;
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .check-in-page {
+    padding: 10px;
+  }
+  
+  .check-in-container {
+    padding: 15px;
+  }
+  
+  .check-in-tabs .nav-tabs {
+    flex-direction: column;
+    
+    .nav-tab {
+      text-align: center;
+      border-bottom: 1px solid var(--primary-low);
+      border-right: none;
+      
+      &.active {
+        border-bottom-color: var(--tertiary);
+      }
+    }
+  }
+  
+  .makeup-check-in .date-options {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  }
+  
+  .records-table .table {
+    font-size: 0.9em;
+    
+    th, td {
+      padding: 8px;
+    }
+  }
+}

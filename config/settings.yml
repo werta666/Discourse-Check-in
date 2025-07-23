@@ -1,0 +1,35 @@
+check_in:
+  check_in_enabled:
+    default: true
+    client: true
+  check_in_daily_points:
+    default: 10
+    min: 1
+    max: 1000
+    client: true
+  check_in_consecutive_bonus_enabled:
+    default: true
+    client: true
+  check_in_consecutive_bonus_days:
+    default: 3
+    min: 2
+    max: 30
+    client: true
+  check_in_consecutive_bonus_points:
+    default: 10
+    min: 1
+    max: 1000
+    client: true
+  check_in_makeup_enabled:
+    default: true
+    client: true
+  check_in_makeup_cost_points:
+    default: 5
+    min: 1
+    max: 100
+    client: true
+  check_in_makeup_max_days:
+    default: 7
+    min: 1
+    max: 30
+    client: true

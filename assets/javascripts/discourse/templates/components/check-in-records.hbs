@@ -1,0 +1,88 @@
+<div class="check-in-records">
+  <div class="records-header">
+    <h3>{{i18n "check_in.records.title"}}</h3>
+  </div>
+
+  {{#if this.loading}}
+    <div class="loading-container">
+      {{loading-spinner}}
+    </div>
+  {{else if this.hasRecords}}
+    <div class="records-table">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>{{i18n "check_in.records.date"}}</th>
+            <th>{{i18n "check_in.records.type"}}</th>
+            <th>{{i18n "check_in.records.points"}}</th>
+            <th>{{i18n "check_in.records.consecutive"}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each this.records as |record|}}
+            <tr class="record-row">
+              <td class="record-date">{{record.check_in_date}}</td>
+              <td class="record-type">
+                {{#if record.is_makeup}}
+                  <span class="makeup-badge">
+                    {{d-icon "undo"}}
+                    {{i18n "check_in.records.makeup"}}
+                  </span>
+                {{else}}
+                  <span class="regular-badge">
+                    {{d-icon "calendar-check"}}
+                    {{i18n "check_in.records.regular"}}
+                  </span>
+                {{/if}}
+              </td>
+              <td class="record-points">
+                <span class="points-earned">+{{record.points_earned}}</span>
+              </td>
+              <td class="record-consecutive">
+                {{record.consecutive_days}} {{i18n "check_in.records.days"}}
+              </td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+
+    {{#if this.showPagination}}
+      <div class="records-pagination">
+        <div class="pagination-info">
+          {{this.pageInfo}}
+        </div>
+        <div class="pagination-controls">
+          <button 
+            class="btn btn-default"
+            {{on "click" this.loadPreviousPage}}
+            disabled={{not this.canGoPrevious}}
+          >
+            {{d-icon "chevron-left"}}
+            {{i18n "check_in.records.previous"}}
+          </button>
+          
+          <span class="page-number">{{i18n "check_in.records.page"}} {{this.currentPage}}</span>
+          
+          <button 
+            class="btn btn-default"
+            {{on "click" this.loadNextPage}}
+            disabled={{not this.canGoNext}}
+          >
+            {{i18n "check_in.records.next"}}
+            {{d-icon "chevron-right"}}
+          </button>
+        </div>
+      </div>
+    {{/if}}
+  {{else}}
+    <div class="no-records">
+      <div class="no-records-icon">
+        {{d-icon "calendar-times"}}
+      </div>
+      <div class="no-records-text">
+        {{i18n "check_in.records.no_records"}}
+      </div>
+    </div>
+  {{/if}}
+</div>

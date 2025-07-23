@@ -1,0 +1,85 @@
+en:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          check_in: "Check-in System"
+  js:
+    check_in:
+      title: "Daily Check-in"
+      nav_title: "Check-in"
+      page_title: "Daily Check-in"
+      page_description: "Check in daily to earn points and maintain your streak!"
+      total_points: "Total Points"
+      points: "points"
+      consecutive_days: "Consecutive days: %{days}"
+
+      button:
+        check_in: "Check In"
+        checking_in: "Checking in..."
+        checked_in: "Checked In Today"
+
+      status:
+        checked_in_today: "You've already checked in today!"
+        disabled: "Check-in system is currently disabled"
+        ready_to_check_in: "Ready to check in for today"
+
+      info:
+        daily_points: "Daily reward: %{points} points"
+        bonus_today: "Bonus today: +%{points} points!"
+        bonus_in_days: "Next bonus in %{days} days (+%{points} points)"
+        makeup_available: "Makeup available (Cost: %{cost} points)"
+
+      tabs:
+        check_in: "Check In"
+        records: "Records"
+        makeup: "Makeup"
+
+      records:
+        title: "Check-in Records"
+        date: "Date"
+        type: "Type"
+        points: "Points"
+        consecutive: "Consecutive"
+        days: "days"
+        makeup: "Makeup"
+        regular: "Regular"
+        no_records: "No check-in records yet"
+        previous: "Previous"
+        next: "Next"
+        page: "Page"
+
+      makeup:
+        title: "Makeup Check-in"
+        your_points: "Your Points"
+        cost: "Makeup Cost"
+        net_gain: "Net Gain"
+        select_date: "Select a date to makeup"
+        confirm: "Confirm Makeup"
+        processing: "Processing..."
+        insufficient_points: "Insufficient points for makeup"
+        need_more_points: "You need %{needed} more points"
+        disabled: "Makeup check-in is disabled"
+
+      success:
+        checked_in: "Successfully checked in!"
+        bonus_included: "including %{points} bonus points"
+        makeup_completed: "Makeup check-in completed for"
+
+      errors:
+        already_checked_in: "You have already checked in today"
+        already_checked_in_date: "You have already checked in for this date"
+        disabled: "Check-in system is disabled"
+        makeup_disabled: "Makeup check-in is disabled"
+        invalid_makeup_date: "Invalid makeup date"
+        insufficient_points: "Insufficient points"
+        date_required: "Date is required"
+
+      transaction:
+        daily_check_in: "Daily check-in reward"
+        consecutive_bonus: "Consecutive check-in bonus (%{days} days)"
+        makeup_cost: "Makeup check-in cost"
+        makeup_check_in: "Makeup check-in for %{date}"
+
+      admin:
+        points_adjusted: "User points adjusted successfully"

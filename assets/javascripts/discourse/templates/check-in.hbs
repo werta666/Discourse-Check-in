@@ -1,0 +1,65 @@
+<div class="check-in-page">
+  <div class="check-in-container">
+    {{#if this.showSuccessMessage}}
+      <div class="check-in-message success-message">
+        <span class="message-text">{{this.successMessage}}</span>
+        <button class="btn-link close-message" {{on "click" this.hideMessage}}>
+          {{d-icon "times"}}
+        </button>
+      </div>
+    {{/if}}
+
+    <div class="check-in-header">
+      <h1>{{i18n "check_in.page_title"}}</h1>
+      <p class="page-description">{{i18n "check_in.page_description"}}</p>
+    </div>
+
+    <div class="check-in-tabs">
+      <nav class="nav-tabs">
+        <button 
+          class="nav-tab {{if this.isCheckInTab 'active'}}"
+          {{on "click" (fn this.switchTab "check-in")}}
+        >
+          {{d-icon "calendar-plus"}}
+          {{i18n "check_in.tabs.check_in"}}
+        </button>
+        
+        <button 
+          class="nav-tab {{if this.isRecordsTab 'active'}}"
+          {{on "click" (fn this.switchTab "records")}}
+        >
+          {{d-icon "list"}}
+          {{i18n "check_in.tabs.records"}}
+        </button>
+        
+        <button 
+          class="nav-tab {{if this.isMakeupTab 'active'}}"
+          {{on "click" (fn this.switchTab "makeup")}}
+        >
+          {{d-icon "undo"}}
+          {{i18n "check_in.tabs.makeup"}}
+        </button>
+      </nav>
+
+      <div class="tab-content">
+        {{#if this.isCheckInTab}}
+          <div class="tab-pane active">
+            <CheckInButton />
+          </div>
+        {{/if}}
+
+        {{#if this.isRecordsTab}}
+          <div class="tab-pane active">
+            <CheckInRecords />
+          </div>
+        {{/if}}
+
+        {{#if this.isMakeupTab}}
+          <div class="tab-pane active">
+            <MakeupCheckIn />
+          </div>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+</div>
