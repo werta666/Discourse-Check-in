@@ -1,20 +1,12 @@
 # frozen_string_literal: true
 
 # name: discourse-check-in
-# about: A comprehensive check-in plugin with points system, consecutive rewards, and makeup functionality
-# meta_topic_id: TODO
+# about: Daily check-in system with points and rewards
 # version: 0.1.0
 # authors: Panda_CC
 # url: https://github.com/werta666/Discourse-Check-in
-# required_version: 2.7.0
 
 enabled_site_setting :check_in_enabled
-
-module ::DiscourseCheckIn
-  PLUGIN_NAME = "discourse-check-in"
-end
-
-require_relative "lib/discourse_check_in/engine"
 
 after_initialize do
   # Load plugin models and controllers
@@ -59,7 +51,7 @@ end
 
 # Add routes
 Discourse::Application.routes.append do
-  get "/check-in" => "check_in#index"
-  post "/check-in/check-in" => "check_in#create"
-  get "/check-in/status" => "check_in#status"
+  get "/check" => "check_in#index"
+  post "/check/checkin" => "check_in#create"
+  get "/check/status" => "check_in#status"
 end

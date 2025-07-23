@@ -1,14 +1,10 @@
 # frozen_string_literal: true
 
 class CheckInController < ApplicationController
-  requires_login
-  before_action :ensure_check_in_enabled
+  before_action :ensure_logged_in
 
   def index
     # 渲染签到主页面
-    respond_to do |format|
-      format.html { render :index }
-    end
   end
 
   def create
@@ -43,10 +39,6 @@ class CheckInController < ApplicationController
   end
 
   private
-
-  def ensure_check_in_enabled
-    raise Discourse::NotFound unless SiteSetting.check_in_enabled
-  end
 
   def perform_check_in
     return { success: false, error: "今天已经签到过了" } if already_checked_in_today?
