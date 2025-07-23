@@ -1,95 +1,91 @@
-import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
-import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import I18n from "I18n";
 
-export default class CheckInButton extends Component {
-  @service currentUser;
-  @service appEvents;
-  
-  @tracked loading = false;
-  @tracked checkedInToday = false;
-  @tracked totalPoints = 0;
-  @tracked consecutiveDays = 0;
-  @tracked canCheckIn = true;
-  @tracked nextBonusIn = null;
-  @tracked settings = {};
+export default Ember.Component.extend({
+  loading: false,
+  checkedInToday: false,
+  totalPoints: 0,
+  consecutiveDays: 0,
+  canCheckIn: true,
+  nextBonusIn: null,
+  settings: null,
 
-  constructor() {
-    super(...arguments);
-    this.loadStatus();
-  }
+  init() {
+    this._super(...arguments);
+    this.set('settings', {});
+    this.send('loadStatus');
+  },
 
-  @action
-  async loadStatus() {
-    try {
-      const response = await ajax("/check-in/check-in-status");
+  actions: {
+    loadStatus() {
+    ajax("/check-in/check-in-status").then((response) => {
       if (response.success) {
         const data = response.data;
-        this.checkedInToday = data.checked_in_today;
-        this.totalPoints = data.total_points;
-        this.consecutiveDays = data.consecutive_days;
-        this.canCheckIn = data.can_check_in;
-        this.nextBonusIn = data.next_bonus_in;
-        this.settings = data.settings;
+        this.setProperties({
+          checkedInToday: data.checked_in_today,
+          totalPoints: data.total_points,
+          consecutiveDays: data.consecutive_days,
+          canCheckIn: data.can_check_in,
+          nextBonusIn: data.next_bonus_in,
+          settings: data.settings
+        });
       }
-    } catch (error) {
+    }).catch((error) => {
       popupAjaxError(error);
-    }
-  }
+    });
+    },
 
-  @action
-  async checkIn() {
+    checkIn() {
     if (this.loading || !this.canCheckIn) return;
 
-    this.loading = true;
-    
-    try {
-      const response = await ajax("/check-in/check-in", {
-        type: "POST"
-      });
+    this.set('loading', true);
 
+    ajax("/check-in/check-in", {
+      type: "POST"
+    }).then((response) => {
       if (response.success) {
-        this.checkedInToday = true;
-        this.canCheckIn = false;
-        this.totalPoints = response.data.total_points;
-        this.consecutiveDays = response.data.consecutive_days;
-        
-        // Show success message
-        this.appEvents.trigger("check-in:success", {
-          pointsEarned: response.data.points_earned,
-          bonusPoints: response.data.bonus_points,
+        this.setProperties({
+          checkedInToday: true,
+          canCheckIn: false,
+          totalPoints: response.data.total_points,
           consecutiveDays: response.data.consecutive_days
         });
+
+        // Show success message
+        if (this.appEvents) {
+          this.appEvents.trigger("check-in:success", {
+            pointsEarned: response.data.points_earned,
+            bonusPoints: response.data.bonus_points,
+            consecutiveDays: response.data.consecutive_days
+          });
+        }
 
         // Refresh status after a short delay
         setTimeout(() => this.loadStatus(), 1000);
       }
-    } catch (error) {
+    }).catch((error) => {
       popupAjaxError(error);
-    } finally {
-      this.loading = false;
+    }).finally(() => {
+      this.set('loading', false);
+    });
     }
-  }
+  },
 
-  get buttonText() {
+  buttonText: Ember.computed('loading', 'checkedInToday', function() {
     if (this.loading) {
       return I18n.t("check_in.button.checking_in");
     }
-    
+
     if (this.checkedInToday) {
       return I18n.t("check_in.button.checked_in");
     }
-    
-    return I18n.t("check_in.button.check_in");
-  }
 
-  get buttonClass() {
+    return I18n.t("check_in.button.check_in");
+  }),
+
+  buttonClass: Ember.computed('checkedInToday', 'canCheckIn', 'loading', function() {
     let classes = ["btn", "check-in-button"];
-    
+
     if (this.checkedInToday) {
       classes.push("btn-success");
     } else if (this.canCheckIn) {
@@ -97,43 +93,43 @@ export default class CheckInButton extends Component {
     } else {
       classes.push("btn-default");
     }
-    
+
     if (this.loading) {
       classes.push("loading");
     }
-    
-    return classes.join(" ");
-  }
 
-  get statusText() {
+    return classes.join(" ");
+  }),
+
+  statusText: Ember.computed('checkedInToday', 'settings.check_in_enabled', function() {
     if (this.checkedInToday) {
       return I18n.t("check_in.status.checked_in_today");
     }
-    
-    if (!this.settings.check_in_enabled) {
+
+    if (!this.get('settings.check_in_enabled')) {
       return I18n.t("check_in.status.disabled");
     }
-    
-    return I18n.t("check_in.status.ready_to_check_in");
-  }
 
-  get pointsInfo() {
-    const dailyPoints = this.settings.daily_points || 0;
+    return I18n.t("check_in.status.ready_to_check_in");
+  }),
+
+  pointsInfo: Ember.computed('settings.daily_points', 'settings.consecutive_bonus_enabled', 'nextBonusIn', 'settings.consecutive_bonus_points', function() {
+    const dailyPoints = this.get('settings.daily_points') || 0;
     let info = I18n.t("check_in.info.daily_points", { points: dailyPoints });
-    
-    if (this.settings.consecutive_bonus_enabled && this.nextBonusIn !== null) {
+
+    if (this.get('settings.consecutive_bonus_enabled') && this.nextBonusIn !== null) {
       if (this.nextBonusIn === 0) {
-        info += " " + I18n.t("check_in.info.bonus_today", { 
-          points: this.settings.consecutive_bonus_points 
+        info += " " + I18n.t("check_in.info.bonus_today", {
+          points: this.get('settings.consecutive_bonus_points')
         });
       } else {
-        info += " " + I18n.t("check_in.info.bonus_in_days", { 
+        info += " " + I18n.t("check_in.info.bonus_in_days", {
           days: this.nextBonusIn,
-          points: this.settings.consecutive_bonus_points 
+          points: this.get('settings.consecutive_bonus_points')
         });
       }
     }
-    
+
     return info;
-  }
-}
+  })
+});

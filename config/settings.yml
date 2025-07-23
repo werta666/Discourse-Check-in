@@ -1,4 +1,4 @@
-check_in:
+plugins:
   check_in_enabled:
     default: true
     client: true

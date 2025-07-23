@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class UserPoint < ActiveRecord::Base
+  self.table_name = 'user_points'
   belongs_to :user
   has_many :point_transactions, through: :user
 

@@ -3,7 +3,7 @@
     {{#if this.showSuccessMessage}}
       <div class="check-in-message success-message">
         <span class="message-text">{{this.successMessage}}</span>
-        <button class="btn-link close-message" {{on "click" this.hideMessage}}>
+        <button class="btn-link close-message" {{action "hideMessage"}}>
           {{d-icon "times"}}
         </button>
       </div>
@@ -16,25 +16,25 @@
 
     <div class="check-in-tabs">
       <nav class="nav-tabs">
-        <button 
-          class="nav-tab {{if this.isCheckInTab 'active'}}"
-          {{on "click" (fn this.switchTab "check-in")}}
+        <button
+          class="nav-tab {{if isCheckInTab 'active'}}"
+          {{action "switchTab" "check-in"}}
         >
           {{d-icon "calendar-plus"}}
           {{i18n "check_in.tabs.check_in"}}
         </button>
-        
-        <button 
-          class="nav-tab {{if this.isRecordsTab 'active'}}"
-          {{on "click" (fn this.switchTab "records")}}
+
+        <button
+          class="nav-tab {{if isRecordsTab 'active'}}"
+          {{action "switchTab" "records"}}
         >
           {{d-icon "list"}}
           {{i18n "check_in.tabs.records"}}
         </button>
-        
-        <button 
-          class="nav-tab {{if this.isMakeupTab 'active'}}"
-          {{on "click" (fn this.switchTab "makeup")}}
+
+        <button
+          class="nav-tab {{if isMakeupTab 'active'}}"
+          {{action "switchTab" "makeup"}}
         >
           {{d-icon "undo"}}
           {{i18n "check_in.tabs.makeup"}}
@@ -42,21 +42,21 @@
       </nav>
 
       <div class="tab-content">
-        {{#if this.isCheckInTab}}
+        {{#if isCheckInTab}}
           <div class="tab-pane active">
-            <CheckInButton />
+            {{check-in-button}}
           </div>
         {{/if}}
 
-        {{#if this.isRecordsTab}}
+        {{#if isRecordsTab}}
           <div class="tab-pane active">
-            <CheckInRecords />
+            {{check-in-records}}
           </div>
         {{/if}}
 
-        {{#if this.isMakeupTab}}
+        {{#if isMakeupTab}}
           <div class="tab-pane active">
-            <MakeupCheckIn />
+            {{makeup-check-in}}
           </div>
         {{/if}}
       </div>

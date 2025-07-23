@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class PointTransaction < ActiveRecord::Base
+  self.table_name = 'point_transactions'
   belongs_to :user
   belongs_to :check_in_record, optional: true
 

@@ -3,41 +3,41 @@
     <h3>{{i18n "check_in.title"}}</h3>
     <div class="check-in-points">
       <span class="points-label">{{i18n "check_in.total_points"}}:</span>
-      <span class="points-value">{{this.totalPoints}}</span>
+      <span class="points-value">{{totalPoints}}</span>
     </div>
   </div>
 
   <div class="check-in-status">
-    <div class="status-text">{{this.statusText}}</div>
-    {{#if this.consecutiveDays}}
+    <div class="status-text">{{statusText}}</div>
+    {{#if consecutiveDays}}
       <div class="consecutive-days">
-        {{i18n "check_in.consecutive_days" days=this.consecutiveDays}}
+        {{i18n "check_in.consecutive_days" days=consecutiveDays}}
       </div>
     {{/if}}
   </div>
 
   <div class="check-in-action">
-    <button 
-      class={{this.buttonClass}}
-      {{on "click" this.checkIn}}
-      disabled={{or this.loading (not this.canCheckIn)}}
+    <button
+      class={{buttonClass}}
+      {{action "checkIn"}}
+      disabled={{or loading (not canCheckIn)}}
     >
-      {{#if this.loading}}
+      {{#if loading}}
         {{d-icon "spinner" class="fa-spin"}}
-      {{else if this.checkedInToday}}
+      {{else if checkedInToday}}
         {{d-icon "check"}}
       {{else}}
         {{d-icon "calendar-plus"}}
       {{/if}}
-      {{this.buttonText}}
+      {{buttonText}}
     </button>
   </div>
 
   <div class="check-in-info">
-    <div class="points-info">{{this.pointsInfo}}</div>
-    {{#if this.settings.makeup_enabled}}
+    <div class="points-info">{{pointsInfo}}</div>
+    {{#if settings.makeup_enabled}}
       <div class="makeup-info">
-        {{i18n "check_in.info.makeup_available" cost=this.settings.makeup_cost}}
+        {{i18n "check_in.info.makeup_available" cost=settings.makeup_cost}}
       </div>
     {{/if}}
   </div>

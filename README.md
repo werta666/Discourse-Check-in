@@ -49,6 +49,19 @@ cd /var/discourse
 2. 解压到 `/var/discourse/plugins/discourse-check-in/`
 3. 重建Discourse容器
 
+### 故障排除
+
+如果遇到数据库迁移错误，请检查：
+
+1. **Rails版本兼容性**: 确保迁移文件使用正确的Rails版本
+2. **模型加载**: 确保模型文件正确加载
+3. **权限问题**: 确保Discourse有权限创建数据库表
+
+常见错误解决方案：
+- 如果迁移失败，检查 `db/migrate/` 文件的时间戳格式
+- 如果模型未找到，确保 `plugin.rb` 中的 `load` 路径正确
+- 如果前端组件不显示，检查Ember.js语法是否符合Discourse版本
+
 ## 配置说明
 
 安装完成后，进入管理后台 → 设置 → 插件 → Check-in System 进行配置：

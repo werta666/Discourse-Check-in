@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class CheckInRecord < ActiveRecord::Base
+  self.table_name = 'check_in_records'
   belongs_to :user
   has_many :point_transactions, dependent: :destroy
 
