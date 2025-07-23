@@ -59,10 +59,10 @@ end
 
 # Add routes
 Discourse::Application.routes.append do
-  get "/check-in" => "check_in#index"
-  post "/check-in/check-in" => "check_in#check_in"
-  get "/check-in/check-in-status" => "check_in#check_in_status"
-  get "/check-in/check-in-records" => "check_in#check_in_records"
-  post "/check-in/makeup-check-in" => "check_in#makeup_check_in"
-  get "/check-in/points" => "check_in#points"
+  get "/check-in" => "discourse_check_in/check_in#index"
+  post "/check-in/check-in" => "discourse_check_in/check_in#create"
+  get "/check-in/status" => "discourse_check_in/check_in#status"
+  get "/check-in/records" => "discourse_check_in/check_in#records"
+  post "/check-in/makeup" => "discourse_check_in/check_in#makeup"
+  get "/check-in/points" => "discourse_check_in/points#index"
 end

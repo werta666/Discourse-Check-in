@@ -1,6 +1,7 @@
 <div class="check-in-page">
   <div class="container">
-    <h1><%= t('check_in.title') %></h1>
+    <h1>每日签到系统</h1>
+    <p>欢迎使用签到功能！</p>
     
     <div class="check-in-content">
       <div class="check-in-info">
@@ -66,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   
   function loadStatus() {
-    fetch('/check-in/check-in-status')
+    fetch('/check-in/status')
     .then(response => response.json())
     .then(data => {
       if (data.success) {

@@ -7,6 +7,10 @@ module ::DiscourseCheckIn
     before_action :ensure_logged_in
     before_action :ensure_check_in_enabled
 
+    def index
+      # 渲染签到主页面
+    end
+
     def create
       service = CheckInService.new(current_user)
       result = service.check_in_today
