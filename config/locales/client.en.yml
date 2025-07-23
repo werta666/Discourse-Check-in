@@ -76,6 +76,7 @@ en:
         invalid_makeup_date: "Invalid makeup date"
         insufficient_points: "Insufficient points"
         date_required: "Date is required"
+        general: "An error occurred. Please try again."
 
       transaction:
         daily_check_in: "Daily check-in reward"

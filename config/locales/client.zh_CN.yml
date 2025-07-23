@@ -76,6 +76,7 @@ zh_CN:
         invalid_makeup_date: "无效的补签日期"
         insufficient_points: "积分不足"
         date_required: "日期是必需的"
+        general: "发生错误，请重试。"
       
       transaction:
         daily_check_in: "每日签到奖励"
