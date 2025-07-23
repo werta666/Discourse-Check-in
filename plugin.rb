@@ -17,11 +17,11 @@ end
 require_relative "lib/discourse_check_in/engine"
 
 after_initialize do
-  # Load plugin models, controllers, and services
+  # Load plugin models and controllers
   load File.expand_path("app/models/check_in_record.rb", __dir__)
   load File.expand_path("app/models/user_point.rb", __dir__)
   load File.expand_path("app/models/point_transaction.rb", __dir__)
-  load File.expand_path("app/services/check_in_service.rb", __dir__)
+  load File.expand_path("app/controllers/check_in_controller.rb", __dir__)
 
   # Extend User model with check-in related methods
   add_to_class(:user, :check_in_records) { has_many :check_in_records, dependent: :destroy }
@@ -59,10 +59,7 @@ end
 
 # Add routes
 Discourse::Application.routes.append do
-  get "/check-in" => "discourse_check_in/check_in#index"
-  post "/check-in/check-in" => "discourse_check_in/check_in#create"
-  get "/check-in/status" => "discourse_check_in/check_in#status"
-  get "/check-in/records" => "discourse_check_in/check_in#records"
-  post "/check-in/makeup" => "discourse_check_in/check_in#makeup"
-  get "/check-in/points" => "discourse_check_in/points#index"
+  get "/check-in" => "check_in#index"
+  post "/check-in/check-in" => "check_in#create"
+  get "/check-in/status" => "check_in#status"
 end
